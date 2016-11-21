@@ -8,6 +8,7 @@ global imgname
 imgname = 'test.png'
 global ranges
 ranges = (0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff)
+rangepoints = ((16, 52), (52, 88), (88, 124), (124, 160), (160, 196), (196, 232), (0, 16), (232, 256))
 global colourtable
 colourtable = [
     ('00',  '000000'),
@@ -302,6 +303,12 @@ def writeexec(data):
             script.write('"\\033[48;5;' + x + 'm \\033[0;00m"')
     script.close()
 
+def search(pointer, hexval):
+    for x in range(pointer[0], pointer[1]):
+        if hexval == colourtable[x][1]:
+            return colourtable[x][0], True
+    return None, False
+
 image = Image.open(imgname)
 pixdata = image.load()
 size = image.size
@@ -310,9 +317,20 @@ ansiend = []
 while count[1] != size[1]:
     pix = list(pixdata[count[0], count[1]])
     ansihexval = rgb2ansi(pix)
-    for x in colourtable:
-        if ansihexval == x[1]:
-            ansidecval = x[0]
+    i = 0
+    for x in ranges:
+        if ansihexval[:2] == str(hex(x))[2:]:
+            ansidecval, found = search(rangepoints[i], ansihexval)
+            break
+        if ansihexval[:2] == '00':
+            ansidecval, found = search(rangepoints[0], ansihexval)
+            break
+        found = False
+        i += 1
+    if not found:
+        ansidecval, found = search(rangepoints[6], ansihexval)
+        if not found:
+            ansidecval, found = search(rangepoints[7], ansihexval)
     ansiend.append(ansidecval)
     if count[0] == size[0] - 1:
         count = (0, count[1] + 1)
