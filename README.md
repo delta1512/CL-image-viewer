@@ -17,5 +17,3 @@ Note: Clear the contents or erase 'test.sh' when you wish to display a new image
   - Automatic resizing of images
   - Removal of the sh executable feature making the script standalone
   - Optional arguments that allow for functionality such as fetching an image from the internet
- 
-  - (For personal education) Implementation of a linked list for search efficiency
