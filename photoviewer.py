@@ -1,11 +1,18 @@
 from PIL import Image
+from sys import argv
 
 #Colour table and xterm-256 approximation algorithm belongs to:
 #MicahElliott http://MicahElliott.com
 #Parts of this code were used from: https://gist.github.com/MicahElliott/719710
 
 global imgname
-imgname = 'test.png'
+imgname = argv[1]
+global outname
+try:
+    if argv[2] == '-o':
+        outname = argv[3]
+except:
+    outname = imgname[:len(imgname)-4]
 global ranges
 ranges = (0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff)
 rangepoints = ((16, 52), (52, 88), (88, 124), (124, 160), (160, 196), (196, 232), (0, 16), (232, 256))
@@ -294,7 +301,7 @@ def rgb2ansi(rgb):
     return res
 
 def writeexec(data):
-    script = open('test.sh', 'a')
+    script = open(outname + '.sh', 'a')
     script.write('echo -e ')
     for x in data:
         if x == '\\n':
