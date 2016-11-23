@@ -6,10 +6,11 @@ The python script writes a sequence of ansi escape codes that display a spacebar
 
 # How to use:
 
-1. Place an image that is called 'test.png' in the same directory as 'photoviewer.py'
-2. Run 'photoviewer.py'
-3. Run in bash (unless you already have permission): sudo chmod 777 test.sh
-4. Run in bash: ./test.sh
+{required} [optional]
+
+1. python {name and directory of image} [-o name of output file]
+3. Run in bash (unless you already have permission): sudo chmod 777 (name of image).sh
+4. Run in bash: ./(name of image).sh
 Note: Clear the contents or erase 'test.sh' when you wish to display a new image
 
 # Future additions:
