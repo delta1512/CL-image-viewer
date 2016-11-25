@@ -1,5 +1,7 @@
+from __future__ import division
 from PIL import Image
 from sys import argv
+import PIL
 
 #Colour table and xterm-256 approximation algorithm belongs to:
 #MicahElliott http://MicahElliott.com
@@ -317,10 +319,16 @@ def search(pointer, hexval):
     return None, False
 
 image = Image.open(imgname)
-pixdata = image.load()
 size = image.size
 count = (0, 0)
 ansiend = []
+if sum(size) > 215:
+    y = -1*sum(size)+215
+    ratio0 = size[0]/sum(size)
+    ratio1 = size[1]/sum(size)
+    size = (int(round((ratio0*y)+size[0])), int(round((ratio1*y)+size[1])))
+    image = image.resize(size, PIL.Image.ANTIALIAS)
+pixdata = image.load()
 while count[1] != size[1]:
     pix = list(pixdata[count[0], count[1]])
     ansihexval = rgb2ansi(pix)
