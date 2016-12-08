@@ -14,13 +14,19 @@ for i, a in enumerate(argv):
             outname = argv[i+1]
             argsused.append(i)
             argsused.append(i+1)
-        #future arguments go here
+        if a == '-nre':
+            noresize = True
+            argsused.append(i)
+        else:
+            noresize = False
+        #arguments go here as an if statement that contains argsused.append(i)
 if len(argsused) < len(argv):
     argsused.append(len(argv))
 for x in range(0, len(argv)):
     if x != argsused[x] or x == len(argv):
         imgname = argv[x]
         break
+
 global ranges
 ranges = (0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff)
 rangepoints = ((16, 52), (52, 88), (88, 124), (124, 160), (160, 196), (196, 232), (0, 16), (232, 256))
@@ -289,8 +295,7 @@ def rgb2ansi(rgb):
         del rgb[3]
     res = ''
     for val in rgb:
-        i = 0
-        while i < len(ranges) - 1:
+        for i in range(0, len(ranges)):
             small, large = int(ranges[i]), int(ranges[i + 1])
             if small <= val <= large:
                 s = abs(small - val)
@@ -305,7 +310,6 @@ def rgb2ansi(rgb):
                     close = str(hex(close))[2:]
                 res = res + close
                 break
-            i += 1
     return res
 
 def writeexec(data):
@@ -331,13 +335,14 @@ image = Image.open(imgname)
 size = image.size
 count = (0, 0)
 ansiend = []
-if sum(size) > 215:
+if sum(size) > 215 and not noresize:
     y = -1*sum(size)+215
     ratio0 = size[0]/sum(size)
     ratio1 = size[1]/sum(size)
     size = (int(round((ratio0*y)+size[0])), int(round((ratio1*y)+size[1])))
     image = image.resize(size, PIL.Image.ANTIALIAS)
 pixdata = image.load()
+
 while count[1] != size[1]:
     pix = list(pixdata[count[0], count[1]])
     ansihexval = rgb2ansi(pix)
