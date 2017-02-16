@@ -1,6 +1,7 @@
 from __future__ import division
 from PIL import Image
 from sys import argv
+import subprocess
 import PIL
 
 #Colour table and xterm-256 approximation algorithm belongs to:
@@ -10,10 +11,10 @@ import PIL
 argsused = [0]
 for i, a in enumerate(argv):
     if i != 0:
-        if a == '-o':
-            outname = argv[i+1]
-            argsused.append(i)
-            argsused.append(i+1)
+        #if a == '-o':
+            #outname = argv[i+1]
+            #argsused.append(i)
+            #argsused.append(i+1)
         if a == '-nre':
             noresize = True
             argsused.append(i)
@@ -313,11 +314,11 @@ def rgb2ansi(rgb):
     return res
 
 def writeexec(data):
-    try:
-        script = open(outname + '.sh', 'a')
-    except:
-        script = open(imgname[:len(imgname)-4] + '.sh', 'a')
-    script.write('echo -e ')
+    #try:
+        #script = open(outname + '.sh', 'a')
+    #except:
+    script = open('.tmp.sh', 'w')
+    script.write('#!/bin/sh\necho -e ')
     for x in data:
         if x == '\\n':
             script.write('\\\\n')
@@ -367,3 +368,5 @@ while count[1] != size[1]:
     else:
         count = (count[0] + 1, count[1])
 writeexec(ansiend)
+proc = subprocess.Popen('./.tmp.sh')
+proc.wait()
