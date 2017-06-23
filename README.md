@@ -10,7 +10,7 @@ Basic usage:
 
     python photoviewer.py test.png
 
-###Initial setup:
+### Initial setup:
 
 (in the same directory as the script)
 
